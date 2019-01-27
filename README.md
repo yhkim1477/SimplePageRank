@@ -9,11 +9,11 @@ Simple PageRank simulator for Java
 ```java
 SimplePageRank spr = new SimplePageRank();
 try {
-spr.initialize("res/TestLinks.csv");
-spr.iterateEval();
-spr.print();
+  spr.initialize("res/TestLinks.csv");
+  spr.iterateEval();
+  spr.print();
 } catch (IOException e) {
-e.printStackTrace();
+  e.printStackTrace();
 }
 ```
 
