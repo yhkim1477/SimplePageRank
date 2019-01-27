@@ -6,7 +6,7 @@ Simple PageRank simulator for Java
 * Support CSV file reader utility
 
 ## Example
-```
+```java
 SimplePageRank spr = new SimplePageRank();
 try {
 spr.initialize("res/TestLinks.csv");
