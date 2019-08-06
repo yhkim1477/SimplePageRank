@@ -1,17 +1,17 @@
-/*
- *    Copyright 2019 Yong-Hyun Kim
- *    
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *    
- *        http://www.apache.org/licenses/LICENSE-2.0
- *    
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+/**
+ * Copyright 2019 Yong-Hyun Kim
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.yhkim.algorithm.pagerank;
@@ -35,9 +35,8 @@ public class SimplePageRank implements Rank<PageRankValue> {
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param iteration
-	 *            Number of algorithm evaluations.
+	 *
+	 * @param iteration Number of algorithm evaluations.
 	 */
 	public SimplePageRank(int iteration) {
 		mapPageRanks = new HashMap<>();
@@ -46,55 +45,52 @@ public class SimplePageRank implements Rank<PageRankValue> {
 
 	/**
 	 * Initialization via the given text file path.
-	 * 
-	 * @param path
-	 *            Text file path.
+	 *
+	 * @param path Text file path.
 	 * @throws IOException
 	 */
 	public void initialize(String path) throws IOException {
-		List<String[]> parsedLines = Util.parseTextFile(path);
-		if (parsedLines == null)
-			throw new IOException();
-
-		for (String[] line : parsedLines)
+		List<String[]> parsedLines = ParserUtil.parseTextFile(path);
+		if (parsedLines == null) throw new IOException();
+		
+		for (String[] line : parsedLines) {
 			addPageRankValue(line);
+		}
 	}
 
 	/**
 	 * Initialization via the given csv text.
-	 * 
-	 * @param lines
-	 *            CSV lines.
+	 *
+	 * @param lines CSV lines.
 	 */
 	public void initialize(String[] lines) {
 		for (String line : lines)
-			addPageRankValue(Util.parseCSV(line));
+			addPageRankValue(ParserUtil.parseCSV(line));
 	}
 
 	/**
 	 * Initialize PageRank map structure via the given csv text.
-	 * 
-	 * @param csv
-	 *            CSV lines.
+	 *
+	 * @param csv CSV lines.
 	 */
 	private void addPageRankValue(String[] csv) {
-		if (csv == null || csv.length == 0)
-			throw new IllegalArgumentException();
+		if (csv == null || csv.length == 0) throw new IllegalArgumentException();
 
 		String key = csv[Configurations.IDX_KEY_LINK];
-		if (!Validator.validateString(key))
-			throw new NullPointerException();
-
-		PageRankValue prValue = null;
-		if (mapPageRanks.containsKey(key))
+		if (!ValidatorUtil.validateString(key)) throw new NullPointerException();
+		
+		PageRankValue prValue;
+		if (mapPageRanks.containsKey(key)) {
 			prValue = mapPageRanks.get(key);
-		else
+		} else {
 			prValue = new PageRankValue();
+		}
 
 		for (int i = (Configurations.IDX_KEY_LINK + 1); i < csv.length; i++) {
 			prValue.addOutLink(csv[i]);
-			if (!mapPageRanks.containsKey(csv[i]))
+			if (!mapPageRanks.containsKey(csv[i])) {
 				mapPageRanks.put(csv[i], new PageRankValue());
+			}
 		}
 		mapPageRanks.put(key, prValue);
 	}
@@ -104,20 +100,16 @@ public class SimplePageRank implements Rank<PageRankValue> {
 	 */
 	public void iterateEval() {
 		int curIter = 0;
-		while (curIter++ < iteration) {
-			evaluate();
-		}
+		while (curIter++ < iteration) evaluate();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/**
 	 * @see com.yhkim.algorithm.pagerank.Rank#evaluate()
 	 */
 	@Override
 	public void evaluate() {
 		// Set the outLinkScore for the entire link
-		mapPageRanks.keySet().stream().forEach(k -> {
+		mapPageRanks.keySet().forEach(k -> {
 			PageRankValue prValue = mapPageRanks.get(k);
 			Iterator<String> outLinks = prValue.getOutLinks();
 
@@ -131,16 +123,12 @@ public class SimplePageRank implements Rank<PageRankValue> {
 				}
 			}
 		});
-
-		// After setting outLinkScore, evaluate each page rank score using the number of
-		// entire link
-		mapPageRanks.keySet().stream()
-				.forEach(k -> mapPageRanks.get(k).evaluate(Configurations.DAMPING_FACTOR, mapPageRanks.size()));
+		
+		// After setting outLinkScore, evaluate each page rank score using the number of entire link
+		mapPageRanks.keySet().forEach(k -> mapPageRanks.get(k).evaluate(Configurations.DAMPING_FACTOR, mapPageRanks.size()));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/**
 	 * @see com.yhkim.algorithm.pagerank.Rank#getResults()
 	 */
 	@Override

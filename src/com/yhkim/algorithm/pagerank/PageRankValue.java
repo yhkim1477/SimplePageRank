@@ -1,17 +1,17 @@
-/*
- *    Copyright 2019 Yong-Hyun Kim
- *    
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *    
- *        http://www.apache.org/licenses/LICENSE-2.0
- *    
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+/**
+ * Copyright 2019 Yong-Hyun Kim
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.yhkim.algorithm.pagerank;
@@ -39,9 +39,8 @@ public class PageRankValue {
 
 	/**
 	 * Add new out link score of the source page.
-	 * 
-	 * @param score
-	 *            Out link score.
+	 *
+	 * @param score Out link score.
 	 */
 	public void addOutLinkScore(double score) {
 		this.outLinkScore += score;
@@ -49,13 +48,13 @@ public class PageRankValue {
 
 	/**
 	 * Add new out link of the source page.
-	 * 
-	 * @param link
-	 *            Out link address.
+	 *
+	 * @param link Out link address.
 	 */
 	public void addOutLink(String link) {
-		if (Validator.validateString(link))
+		if (ValidatorUtil.validateString(link)) {
 			outLinks.add(link);
+		}
 	}
 
 	/**
@@ -97,11 +96,9 @@ public class PageRankValue {
 	/**
 	 * Evaluate the pagerank algorithm using the given damping factor and the total
 	 * number of links.
-	 * 
-	 * @param d
-	 *            Damping factor.
-	 * @param n
-	 *            The total number of links.
+	 *
+	 * @param d Damping factor.
+	 * @param n The total number of links.
 	 */
 	public void evaluate(double d, long n) {
 		pageRankScore = (1 - d) / n + d * outLinkScore;
